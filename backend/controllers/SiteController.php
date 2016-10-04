@@ -6,12 +6,14 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\models\Twits;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $layout = 'blog.php';
     /**
      * @inheritdoc
      */
@@ -29,6 +31,16 @@ class SiteController extends Controller
                         'actions' => ['logout', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['create-twit', 'index'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['create-time-twit', 'index'],
+                        'allow' => true,
+                        'roles' => ['?'],
                     ],
                 ],
             ],
@@ -60,7 +72,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $title = 'Административная панель';
+        return $this->render('index',[
+            'caption' => $title
+        ]);
     }
 
     /**
@@ -94,5 +109,50 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionCreateTwit() {
+
+        $twit = new Twits();
+
+        $post = Yii::$app->request->post("Twits");
+        if(count($post)) {
+            $twit->text = $post['text'];
+            $twit->image = $post['image'];
+
+            if ($twit->save()) {
+                $twit = new Twits();
+            }
+        }
+
+        return $this->render("create-twit",[
+            'twit' => $twit
+        ]);
+    }
+
+    public function actionCreateTimeTwit() {
+
+        $twit = new Twits();
+        $post = Yii::$app->request->post("Twits");
+        $message = 'Не удалось добавить твит';
+        $success = false;
+
+        if($_POST) { // TODO: не работает, поправить условие
+            $curr_time = time();
+
+            $twit->text = $curr_time;
+
+            if ($twit->save()) {
+                $message = 'Твит был добавлен в '.$curr_time;
+                $success = true;
+                $twit = new Twits();
+            }
+        }
+
+        return $this->render("create-time-twit", [
+            'twit' => $twit,
+            'message' => $message,
+            'success' => $success
+        ]);
     }
 }
