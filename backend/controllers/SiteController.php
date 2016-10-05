@@ -133,13 +133,12 @@ class SiteController extends Controller
     public function actionCreateTimeTwit() {
 
         $twit = new Twits();
-        $post = Yii::$app->request->post("Twits");
+        date_default_timezone_set('Europe/Moscow');
         $message = 'Не удалось добавить твит';
         $success = false;
 
-        if($_POST) { // TODO: не работает, поправить условие
-            $curr_time = time();
-
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $curr_time = date('H:i:s');
             $twit->text = $curr_time;
 
             if ($twit->save()) {
