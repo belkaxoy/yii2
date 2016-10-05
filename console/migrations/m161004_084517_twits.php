@@ -14,13 +14,18 @@ class m161004_084517_twits extends Migration
 
         $this->createTable('{{%twits}}', [
             'id' => $this->primaryKey(),
+            'user_id' => $this -> integer() -> notNull(),
             'text' => $this->text(),
             'image' => $this->string(255),
         ], $tableOptions);
+
+        $this -> createIndex("twits_user", "{{%twits}}", "user_id");
+        $this -> addForeignKey("FK_twits_user", "{{%twits}}", "user_id", "{{%user}}", "id");
     }
 
     public function safeDown()
     {
+        $this->dropForeignKey("FK_twits_user", "{{%twits}}");
         $this->dropTable('{{%twits}}');
     }
 }
