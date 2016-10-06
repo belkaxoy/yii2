@@ -32,7 +32,7 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    [
+/*                    [
                         'actions' => ['create-twit', 'index'],
                         'allow' => true,
                         'roles' => ['?'],
@@ -41,7 +41,7 @@ class SiteController extends Controller
                         'actions' => ['create-time-twit', 'index'],
                         'allow' => true,
                         'roles' => ['?'],
-                    ],
+                    ],*/
                 ],
             ],
             'verbs' => [

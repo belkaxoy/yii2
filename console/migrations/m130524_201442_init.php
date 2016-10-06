@@ -1,6 +1,7 @@
 <?php
 
 use yii\db\Migration;
+use common\models\User;
 
 class m130524_201442_init extends Migration
 {
@@ -25,10 +26,19 @@ class m130524_201442_init extends Migration
             'role' => $this->string(32)->notNull()->defaultValue('user'),
             'avatar' => $this->string(255)->defaultValue('$default_image'),
 
-            'banned' => $this->boolean()->notNull()->defaultValue(false),
+            'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);
+
+        $user = new User();
+        $user->username = 'big_bro';
+        $user->role = 'admin';
+        $user->email = 'big_bro@localhost';
+        $user->setPassword('admin');
+        $user->generateAuthKey();
+
+        $user->save();
     }
 
     public function down()
